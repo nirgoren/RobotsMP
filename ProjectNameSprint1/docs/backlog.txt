@@ -1,0 +1,15 @@
+Project Tasks
+-------------
+
+T4. UI simulation so the user can drag the banana between cells
+T5. Add missing guarantees about going from shower directly to bed
+
+
+
+
+Delivered in Sprint 1
+---------------------
+
+T1. Basic safety guarantees about monkey movement
+T2. Simulation running (but still not interactive)
+T3. Fixed loading of image of banana

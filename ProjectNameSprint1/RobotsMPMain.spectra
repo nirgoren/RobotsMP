@@ -1,0 +1,61 @@
+import "./imports/DwyerPatterns.spectra"
+
+/**
+ * Specifies the assumptions and guarantees of ProjectName...
+ * 
+ * Note the parametric Dim type.  
+ */
+ 
+ spec RobotsMPMain
+ 
+ sys DimX[2] robotsX;
+ sys DimY[2] robotsY;
+ 
+ type DimX = Int(0..7);
+ type DimY = Int(0..7);
+ type NumRobots = Int(0..2);
+ type NumObstacles = Int(0..2);
+ 
+ define
+  start0 := robotsX[0] = 0 & robotsY[0] = 0;
+  start1 := robotsX[1] = 7 & robotsY[1] = 7;
+  obstacle0 :=  (robotsX[0]=0 & robotsY[0]=4) | (robotsX[1]=0 & robotsY[1]=4);     
+  atGoal0 := robotsX[0]=0 & robotsY[0]=7;
+  atGoal1 := robotsX[1]=7 & robotsY[1]=0;
+  Collision := robotsX[0] = robotsX[1] & robotsY[0] = robotsY[1]; 
+  
+  predicate moveXOnly(DimX Xpos, DimY Ypos):
+	(Xpos+1 = next(Xpos) |
+	Xpos   = next(Xpos) |
+	Xpos-1 = next(Xpos) ) &   
+	Ypos   = next(Ypos);
+  
+  predicate moveYOnly(DimX Xpos, DimY Ypos):
+	(Ypos+1 = next(Ypos) |
+	Ypos   = next(Ypos) |
+	Ypos-1 = next(Ypos) ) &   
+	Xpos   = next(Xpos);
+	
+    
+  predicate validMove(DimX Xpos, DimY Ypos):
+  	moveXOnly(Xpos, Ypos) | moveYOnly(Xpos, Ypos);
+  
+  gar startPositions:
+  	start0 & start1;
+  
+  gar noCollisionsBetweenRobots:
+  	G !Collision;
+  	
+  gar reachGoal:
+  	GF (atGoal0 & atGoal1);
+  
+  gar noCollisionWithObstacles:
+  	G !obstacle0;
+  	
+  gar robotMoves0:
+  	G validMove(robotsX[0], robotsY[0]);
+  
+  gar robotMoves1:
+  	G ((moveXOnly(robotsX[1], robotsY[1]) | moveYOnly(robotsX[1], robotsY[1])));
+  	//G (validMove(robotsX[1], robotsY[1]));
+   
