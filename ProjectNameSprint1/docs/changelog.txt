@@ -1,8 +1,3 @@
-Changes from Sprint 1 to Sprint 2
----------------------------------
 
-1. Added...
-2. Replaced assumption x with two new assumptions x1 and x2
-3. Added manual simulation mode
 
 
