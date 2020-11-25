@@ -37,8 +37,30 @@ import "./imports/DwyerPatterns.spectra"
 	Xpos   = next(Xpos);
 	
     
+  // The following three are completely identical  
+    
   predicate validMove(DimX Xpos, DimY Ypos):
   	moveXOnly(Xpos, Ypos) | moveYOnly(Xpos, Ypos);
+    
+  predicate validMove1(DimX Xpos, DimY Ypos):
+  	moveXOnly(Xpos, Ypos) | moveYOnly(Xpos, Ypos);
+  	
+  predicate validMove2(DimX Xpos, DimY Ypos):
+  	moveXOnly(Xpos, Ypos) | moveYOnly(Xpos, Ypos);
+  	
+  // This works as expected
+  gar robotMoves0:
+  	G validMove1(robotsX[0], robotsY[0]);
+  
+  gar robotMoves1:
+  	G validMove2(robotsX[1], robotsY[1]);
+  	
+//  This fails??? Perhaps some bug in spectra regarding predicates and arrays?
+//  gar robotMoves0:
+//  	G validMove(robotsX[0], robotsY[0]);
+//  
+//  gar robotMoves1:
+//  	G validMove(robotsX[1], robotsY[1]);
   
   gar startPositions:
   	start0 & start1;
@@ -52,10 +74,5 @@ import "./imports/DwyerPatterns.spectra"
   gar noCollisionWithObstacles:
   	G !obstacle0;
   	
-  gar robotMoves0:
-  	G validMove(robotsX[0], robotsY[0]);
   
-  gar robotMoves1:
-  	G ((moveXOnly(robotsX[1], robotsY[1]) | moveYOnly(robotsX[1], robotsY[1])));
-  	//G (validMove(robotsX[1], robotsY[1]));
    
