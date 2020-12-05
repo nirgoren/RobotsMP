@@ -1,0 +1,92 @@
+import "./imports/DwyerPatterns.spectra"
+
+/**
+ * Specifies the assumptions and guarantees of ProjectName...
+ * 
+ * Note the parametric Dim type.  
+ */
+ 
+ spec RobotsMPVariant
+ 
+ define NumRobots := 2;
+ define NumObstacles := 2;
+ define DimX := 4;
+ define DimY := 4;
+ 
+type DimX = Int(0..DimX);
+type DimY = Int(0..DimY);
+ 
+ sys DimX[NumRobots] robotsX;
+ sys DimY[NumRobots] robotsY;
+ sys DimX[NumRobots] startsX;
+ sys DimY[NumRobots] startsY;
+ sys DimX[NumRobots] goalsX;
+ sys DimY[NumRobots] goalsY;
+ sys DimX[NumObstacles] obstaclesX;
+ sys DimY[NumObstacles] obstaclesY;
+  
+  predicate Collision(DimX Xpos0, DimY Ypos0, DimX Xpos1, DimY Ypos1):
+  	Xpos0 = Xpos1 & Ypos0 = Ypos1;
+  	
+  predicate moveXOnly(DimX Xpos, DimY Ypos):
+	(Xpos+1 = next(Xpos) |
+	Xpos   = next(Xpos) |
+	Xpos-1 = next(Xpos) ) &   
+	Ypos   = next(Ypos);
+  
+  predicate moveYOnly(DimX Xpos, DimY Ypos):
+	(Ypos+1 = next(Ypos) |
+	Ypos   = next(Ypos) |
+	Ypos-1 = next(Ypos) ) &   
+	Xpos   = next(Xpos);
+	
+    
+  predicate validMove(Int(0.. (NumRobots-1)) i):
+  	moveXOnly(robotsX[i], robotsY[i]) | moveYOnly(robotsX[i], robotsY[i]);
+  	
+  predicate CollisionRobotObstacle(Int(0.. (NumRobots-1)) i, Int(0.. (NumObstacles-1)) j):
+  	robotsX[i] = obstaclesX[j] & robotsY[i] = obstaclesY[j];
+  	
+  predicate CollisionBetweenRobots(Int(0.. (NumRobots-1)) i, Int(0.. (NumRobots-1)) j):
+  	(i != j) & (robotsX[i] = robotsX[j] & robotsY[i] = robotsY[j]);
+  
+  predicate reachGoal(Int(0.. (NumRobots-1)) i):
+ 	robotsX[i] = goalsX[i] & robotsY[i] = goalsY[i];
+ 	
+  predicate ObstacleNoMove(Int(0.. (NumObstacles-1)) i):
+  	obstaclesX[i] = next(obstaclesX[i]) & obstaclesY[i] = next(obstaclesY[i]);
+  	
+  predicate StartNoMove(Int(0.. (NumRobots-1)) i):
+  	startsX[i] = next(startsX[i]) & startsY[i] = next(startsY[i]);
+  	
+  predicate GoalNoMove(Int(0.. (NumRobots-1)) i):
+  	goalsX[i] = next(goalsX[i]) & goalsY[i] = next(goalsY[i]);
+  	
+  predicate robotAtStart(Int(0.. (NumRobots-1)) i):
+  	robotsX[i] = startsX[i] & robotsY[i] = startsY[i];
+  	
+  gar robotsAtStarts:
+  	forall i in Int(0..(NumRobots-1)).robotAtStart(i);
+  	
+  gar reachGoals:
+  	GF forall i in Int(0..(NumRobots-1)).reachGoal(i);
+     
+  gar noCollisionsWithObstacles:
+  	G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumObstacles-1)).!CollisionRobotObstacle(i, j);
+   
+  gar noCollisionsBetweenRobots:
+  	G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumRobots-1)).!CollisionBetweenRobots(i, j);
+  	
+  gar validMoves:
+  	G forall i in Int(0..(NumRobots-1)).validMove(i);
+  	
+  gar staticObstacles:
+  	G forall i in Int(0..(NumObstacles-1)).ObstacleNoMove(i);
+  	
+  gar staticStarts:
+  	G forall i in Int(0..(NumRobots-1)).StartNoMove(i);
+  	
+  gar staticGoals:
+  	G forall i in Int(0..(NumRobots-1)).GoalNoMove(i);
+  	
+  

@@ -1,0 +1,80 @@
+import "./imports/DwyerPatterns.spectra"
+
+/**
+ * Specifies the assumptions and guarantees of ProjectName...
+ * 
+ * Note the parametric Dim type.  
+ */
+ 
+ spec RobotsMPVariant2
+ 
+ define NumRobots := 2;
+ define NumObstacles := 2;
+ define DX := 7;
+ define DY := 7;
+ 
+type DimX = Int(0..DX);
+type DimY = Int(0..DY);
+ 
+ sys DimX[NumRobots] robotsX;
+ sys DimY[NumRobots] robotsY;
+ sys DimX[NumObstacles] obstaclesX;
+ sys DimY[NumObstacles] obstaclesY;
+ 
+ define
+  start0 := robotsX[0] = 0 & robotsY[0] = 0;
+  start1 := robotsX[1] = 7 & robotsY[1] = 7;
+  obstacle0 :=  obstaclesX[0]=0 & obstaclesY[0]=4;    
+  goal0 := robotsX[0]=0 & robotsY[0]=7;
+  goal1 := robotsX[1]=7 & robotsY[1]=0;
+  	
+  predicate moveXOnly(DimX Xpos, DimY Ypos):
+	(Xpos+1 = next(Xpos) |
+	Xpos   = next(Xpos) |
+	Xpos-1 = next(Xpos) ) &   
+	Ypos   = next(Ypos);
+  
+  predicate moveYOnly(DimX Xpos, DimY Ypos):
+	(Ypos+1 = next(Ypos) |
+	Ypos   = next(Ypos) |
+	Ypos-1 = next(Ypos) ) &   
+	Xpos   = next(Xpos);
+	
+    
+  predicate validMove(Int(0.. (NumRobots-1)) i):
+  	moveXOnly(robotsX[i], robotsY[i]) | moveYOnly(robotsX[i], robotsY[i]);
+  	
+  predicate CollisionRobotObstacle(Int(0.. (NumRobots-1)) i, Int(0.. (NumObstacles-1)) j):
+  	robotsX[i] = obstaclesX[j] & robotsY[i] = obstaclesY[j];
+  	
+  predicate CollisionBetweenRobots(Int(0.. (NumRobots-1)) i, Int(0.. (NumRobots-1)) j):
+  	(i != j) & (robotsX[i] = robotsX[j] & robotsY[i] = robotsY[j]);
+  
+  predicate reachGoal(Int(0.. (NumRobots-1)) i):
+ 	goal0 & goal1;
+ 	
+  predicate ObstacleNoMove(Int(0.. (NumObstacles-1)) i):
+  	obstaclesX[i] = next(obstaclesX[i]) & obstaclesY[i] = next(obstaclesY[i]);
+  	
+  gar startPositions:
+  	start0 & start1;
+  	
+  gar obstaclePositions:
+  	obstacle0;
+  	
+  gar goalPositions:
+  	GF goal0 & goal1;
+     
+  gar noCollisionsWithObstacles:
+  	G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumObstacles-1)).!CollisionRobotObstacle(i, j);
+   
+  gar noCollisionsBetweenRobots:
+  	G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumRobots-1)).!CollisionBetweenRobots(i, j);
+  	
+  gar validMoves:
+  	G forall i in Int(0..(NumRobots-1)).validMove(i);
+  	
+  gar staticObstacles:
+  	G forall i in Int(0..(NumObstacles-1)).ObstacleNoMove(i);
+  	
+  

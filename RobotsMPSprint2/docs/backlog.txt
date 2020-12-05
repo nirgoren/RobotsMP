@@ -1,0 +1,18 @@
+Project Tasks
+-------------
+
+T4. Fix weird behaviour about the start locations of the robots in Variant1
+T5. Understand why G (validMove(robotsX[1], robotsY[1])); doesn't produce expected behaviour but G ((moveXOnly(robotsX[1], robotsY[1]) | moveYOnly(robotsX[1], robotsY[1]))); does
+for robot1 in RobotsMPMain (and other variants too) - update: this is due to a confirmed bug in spectra
+T6. Improve visuals
+T7. Add system variables and interactivity
+T8. Figure out dealing with unreachable targets
+
+
+
+Delivered in Sprint 1
+---------------------
+
+T1. Basic safety guarantees about robot movement
+T2. Simulation running (but still not interactive)
+T3. Basic safety guarantees about robot movement

@@ -1,0 +1,16 @@
+Assumptions
+-----------
+
+For now we don't have any environment variables and the start locations, targets and obstacle locations are all hard coded in the specification.
+
+Guarantees
+----------
+
+1. The robots should get to their targets all at once infinitely often in every run
+2. The robots should move in steps of at most 1 in each direction, and only in one direction
+3. The robots should not collide with each other or the obstacles
+4. The targets and obstacles locations don't change
+
+
+
+

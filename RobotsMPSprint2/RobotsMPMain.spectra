@@ -1,0 +1,82 @@
+import "./imports/DwyerPatterns.spectra"
+
+/**
+ * Specifies the assumptions and guarantees of ProjectName...
+ * 
+ * Note the parametric Dim type.  
+ */
+ 
+ spec RobotsMPMain
+ 
+ sys DimX[2] robotsX;
+ sys DimY[2] robotsY;
+ 
+ type DimX = Int(0..4);
+ type DimY = Int(0..4);
+ type NumRobots = Int(0..2);
+ type NumObstacles = Int(0..2);
+ 
+ define
+  start0 := robotsX[0] = 0 & robotsY[0] = 0;
+  start1 := robotsX[1] = 4 & robotsY[1] = 4;
+  obstacle0 :=  (robotsX[0]=0 & robotsY[0]=2) | (robotsX[1]=0 & robotsY[1]=2);
+  obstacle1 :=  (robotsX[0]=1 & robotsY[0]=2) | (robotsX[1]=1 & robotsY[1]=2);
+  obstacle2 :=  (robotsX[0]=3 & robotsY[0]=2) | (robotsX[1]=3 & robotsY[1]=2);
+  obstacle3 :=  (robotsX[0]=4 & robotsY[0]=2) | (robotsX[1]=4 & robotsY[1]=2);      
+  atGoal0 := robotsX[0]=0 & robotsY[0]=4;
+  atGoal1 := robotsX[1]=4 & robotsY[1]=0;
+  Collision := robotsX[0] = robotsX[1] & robotsY[0] = robotsY[1]; 
+  Swap := (next(robotsX[0]) = robotsX[1] & next(robotsY[0]) = robotsY[1]) | (next(robotsX[1]) = robotsX[0] & next(robotsY[1]) = robotsY[0]);
+  
+  predicate moveXOnly(DimX Xpos, DimY Ypos):
+	(Xpos+1 = next(Xpos) |
+	Xpos   = next(Xpos) |
+	Xpos-1 = next(Xpos) ) &   
+	Ypos   = next(Ypos);
+  
+  predicate moveYOnly(DimX Xpos, DimY Ypos):
+	(Ypos+1 = next(Ypos) |
+	Ypos   = next(Ypos) |
+	Ypos-1 = next(Ypos) ) &   
+	Xpos   = next(Xpos);
+	
+    
+  // The following three are completely identical  
+    
+  predicate validMove(DimX Xpos, DimY Ypos):
+  	moveXOnly(Xpos, Ypos) | moveYOnly(Xpos, Ypos);
+    
+  predicate validMove1(DimX Xpos, DimY Ypos):
+  	moveXOnly(Xpos, Ypos) | moveYOnly(Xpos, Ypos);
+  	
+  predicate validMove2(DimX Xpos, DimY Ypos):
+  	moveXOnly(Xpos, Ypos) | moveYOnly(Xpos, Ypos);
+  	
+  // This works as expected
+  gar robotMoves0:
+  	G validMove1(robotsX[0], robotsY[0]);
+  
+  gar robotMoves1:
+  	G validMove2(robotsX[1], robotsY[1]);
+  	
+//  This fails??? Perhaps some bug in spectra regarding predicates and arrays?
+//  gar robotMoves0:
+//  	G validMove(robotsX[0], robotsY[0]);
+//  
+//  gar robotMoves1:
+//  	G validMove(robotsX[1], robotsY[1]);
+  
+  gar startPositions:
+  	start0 & start1;
+  
+  gar noCollisionsBetweenRobots:
+  	G !Collision and !Swap;
+  	
+  gar reachGoal:
+  	GF (atGoal0 & atGoal1);
+  
+  gar noCollisionWithObstacles:
+  	G !obstacle0 and !obstacle1 and !obstacle2 and !obstacle3;
+  	
+  
+   

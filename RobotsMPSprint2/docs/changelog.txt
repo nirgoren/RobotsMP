@@ -1,0 +1,5 @@
+Added animation for robots
+Added images for robots, obstacles, goals
+Added constraint for the robots to not swap locations
+
+
