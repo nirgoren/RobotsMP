@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -24,158 +25,87 @@ import javax.swing.Timer;
 import tau.smlab.syntech.controller.executor.ControllerExecutor;
 import tau.smlab.syntech.controller.jit.BasicJitController;
 import game.Point;
-
+import game.Utility;
 
 @SuppressWarnings("serial")
 public class Board extends JPanel {
-	final int x = 5;
-	final int y = 5;
-	final int dim = 100;
-	static final int y_offset = 30;
-	final int num_robots = 2;
-	Point[] robots = new Point[num_robots];
-	Point[] obstacles = new Point[4];
-	Point[] goals = new Point[num_robots];
-	
-	Point[] robots_prev = new Point[num_robots];
-	Point[] robots_graphics = new Point[num_robots];
-	Point[] start_graphics = new Point[num_robots];
-	Point[] target_graphics = new Point[num_robots];
-	
-	
 	
 	int animation_steps = 0;
 	Timer timer;
+	ControlPanel cp;
+	Point[] robots_graphics;
+	Point[] start_graphics;
+	Point[] target_graphics;
 	
 	BufferedImage buffer;
-	BufferedImage[] robots_images = new BufferedImage[num_robots];
-	BufferedImage[] goals_images = new BufferedImage[num_robots];
+	BufferedImage[] robots_images;
+	BufferedImage[] goals_images;
 	BufferedImage base_robot_image;
 	BufferedImage base_goal_image;
 	BufferedImage obstacle_image;
-	int temp = 0;
-
-	ControllerExecutor executor;
-	Map<String,String> inputs = new HashMap<String, String>();
 	
-	public static BufferedImage rotate(BufferedImage image, double angle) {
-	    double sin = Math.abs(Math.sin(angle)), cos = Math.abs(Math.cos(angle));
-	    int w = image.getWidth(), h = image.getHeight();
-	    int neww = (int)Math.floor(w*cos+h*sin), newh = (int) Math.floor(h * cos + w * sin);
-	    BufferedImage result = deepCopy(image, false);
-	    Graphics2D g = result.createGraphics();
-	    g.translate((neww - w) / 2, (newh - h) / 2);
-	    g.rotate(angle, w / 2, h / 2);
-	    g.drawRenderedImage(image, null);
-	    g.dispose();
-	    return result;
+	public Board(ControlPanel cp)
+	{
+		super();
+		this.cp = cp;
+		robots_graphics = new Point[cp.num_robots];
+		start_graphics = new Point[cp.num_robots];
+		target_graphics = new Point[cp.num_robots];
+		robots_images = new BufferedImage[cp.num_robots];
+		goals_images = new BufferedImage[cp.num_robots];
 	}
+	
 
-	public static BufferedImage deepCopy(BufferedImage bi, boolean copyPixels) {
-	    ColorModel cm = bi.getColorModel();
-	    boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
-	    WritableRaster raster = bi.getRaster().createCompatibleWritableRaster();
-	    if (copyPixels) {
-	        bi.copyData(raster);
-	    }
-	    return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
-	}    
-
-	public void run() throws Exception {
-		obstacles[0] = new Point(0,2);
-		obstacles[1] = new Point(1,2);
-		obstacles[2] = new Point(3,2);
-		obstacles[3] = new Point(4,2);
-		goals[0] = new Point(0, 4);
-		goals[1] = new Point(4, 0);
-		
-		for (int i = 0; i < num_robots; i++) {
-			robots[i] = new Point();
-			robots_prev[i] = new Point();
+	public void init() throws Exception {
+		for (int i = 0; i < cp.num_robots; i++) {
 			start_graphics[i] = new Point();
 			target_graphics[i] = new Point();
 			robots_graphics[i] = new Point();
 		}
-		
 		base_robot_image = ImageIO.read(new File("img/pacman.jpg"));
 		obstacle_image = ImageIO.read(new File("img/ghost.jpg"));
 		base_goal_image = ImageIO.read(new File("img/coin.jpg"));
 
-		executor = new ControllerExecutor(new BasicJitController(), "out");
-		for (int i = 0; i < num_robots; i++) {
+		for (int i = 0; i < cp.num_robots; i++) {
 			robots_images[i] = ImageIO.read(new File("img/pacman.jpg"));
 			goals_images[i] = ImageIO.read(new File("img/coin.jpg"));
 		}
-
-//		Random rand = new Random();
-//		banana[0] = rand.nextInt(8);
-//		banana[1] = rand.nextInt(8);
-		
-//		inputs.put("banana[0]", Integer.toString(banana[0]));
-//		inputs.put("banana[1]", Integer.toString(banana[1]));
-		executor.initState(inputs);
-		
-		Map<String, String> sysValues = executor.getCurrOutputs();
-		
-		for (int i = 0; i < num_robots; i++) {
-			robots_prev[i].setX(Integer.parseInt(sysValues.get("robotsX[" + i + "]")));
-			robots_prev[i].setY(Integer.parseInt(sysValues.get("robotsY[" + i + "]")));
-			robots[i].setX(Integer.parseInt(sysValues.get("robotsX[" + i + "]")));
-			robots[i].setY(Integer.parseInt(sysValues.get("robotsY[" + i + "]")));
-		}
-		
-		next();
-	}
-	
-	void next() throws Exception {
-		for (int i = 0; i < num_robots; i++) {
-			robots_prev[i].setX(robots[i].getX());
-			robots_prev[i].setY(robots[i].getY());
-		}
-		executor.updateState(inputs);
-		
-		Map<String, String> sysValues = executor.getCurrOutputs();
-		
-		for (int i = 0; i < num_robots; i++) {
-			robots[i].setX(Integer.parseInt(sysValues.get("robotsX[" + i + "]")));
-			robots[i].setY(Integer.parseInt(sysValues.get("robotsY[" + i + "]")));
-		}
-		animate();
 	}
 	
 	public void animate() throws Exception
 	{
-		for (int i = 0; i < num_robots; i++) {
-			int diff_x = robots[i].getX() - robots_prev[i].getX();
-			int diff_y = robots[i].getY() - robots_prev[i].getY();
+		for (int i = 0; i < cp.num_robots; i++) {
+			int diff_x = cp.robots[i].getX() - cp.robots_prev[i].getX();
+			int diff_y = cp.robots[i].getY() - cp.robots_prev[i].getY();
 			switch(diff_x)
 			{
 			case 1:
 				robots_images[i] = base_robot_image;
 				break;
 			case -1:
-				robots_images[i] = rotate(base_robot_image, Math.PI);
+				robots_images[i] = Utility.rotate(base_robot_image, Math.PI);
 				break;
 			}
 			switch(diff_y)
 			{
 			case 1:
-				robots_images[i] = rotate(base_robot_image, Math.PI/2);
+				robots_images[i] = Utility.rotate(base_robot_image, Math.PI/2);
 				break;
 			case -1:
-				robots_images[i] = rotate(base_robot_image, 3*Math.PI/2);
+				robots_images[i] = Utility.rotate(base_robot_image, 3*Math.PI/2);
 				break;
 			}
 		}
-		for (int i = 0; i < num_robots; i++) {
-			robots_graphics[i].setX(robots_prev[i].getX() * dim); 
-			robots_graphics[i].setY(robots_prev[i].getY() * dim); 
-			start_graphics[i].setX(robots_prev[i].getX() * dim); 
-			start_graphics[i].setY(robots_prev[i].getY() * dim); 
-			target_graphics[i].setX(robots[i].getX() * dim); 
-			target_graphics[i].setY(robots[i].getY() * dim); 
+
+		for (int i = 0; i < cp.num_robots; i++) {
+			robots_graphics[i].setX(cp.robots_prev[i].getX() * cp.dim); 
+			robots_graphics[i].setY(cp.robots_prev[i].getY() * cp.dim); 
+			start_graphics[i].setX(cp.robots_prev[i].getX() * cp.dim); 
+			start_graphics[i].setY(cp.robots_prev[i].getY() * cp.dim); 
+			target_graphics[i].setX(cp.robots[i].getX() * cp.dim); 
+			target_graphics[i].setY(cp.robots[i].getY() * cp.dim); 
 		}
-		
+
 			timer = new Timer(16, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -184,15 +114,18 @@ public class Board extends JPanel {
             	{
             		timer.stop();
                     animation_steps =0;
-            		try {
-						next();
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+                    cp.ready_for_next = true;
+                    cp.advance_button.setText("Next step");
                     return;
+//            		try {
+//						next();
+//					} catch (Exception e1) {
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					}
+//                    return;
             	}
-            	for (int i = 0; i < num_robots; i++) {
+            	for (int i = 0; i < cp.num_robots; i++) {
 					robots_graphics[i].setX((int)(start_graphics[i].getX() * (1 - (double)(animation_steps)/num_steps)
 							+ target_graphics[i].getX() * ((double)(animation_steps)/num_steps)));
 					robots_graphics[i].setY((int)(start_graphics[i].getY() * (1 - (double)(animation_steps)/num_steps)
@@ -203,6 +136,7 @@ public class Board extends JPanel {
             	repaint();
             }
         });
+
         timer.start();
 	}
 	
@@ -214,7 +148,6 @@ public class Board extends JPanel {
     }
 	
 	protected void updateBuffer() {
-
         if (getWidth() > 0 && getHeight() > 0) {
 
             if (buffer == null) {
@@ -224,7 +157,7 @@ public class Board extends JPanel {
             }
 
             Graphics2D g2d = buffer.createGraphics();
-            g2d.clearRect(0, 0, x*dim + 8, y*dim + y_offset + 8);
+            g2d.clearRect(0, 0, cp.x*cp.dim + 8, cp.y*cp.dim + 8);
             g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
@@ -250,14 +183,14 @@ public class Board extends JPanel {
 
     		g2d.setColor(Color.WHITE);
     		//g2d.drawImage(robot_image, temp, dim, null);
-    		for (int i = 0; i < num_robots; i++) {
-			g2d.drawImage(goals_images[i], goals[i].getX() * dim, goals[i].getY() * dim, null);
+    		for (int i = 0; i < cp.num_robots; i++) {
+			g2d.drawImage(goals_images[i], cp.goals[i].getX() * cp.dim, cp.goals[i].getY() * cp.dim, null);
     		}
-    		for (int i = 0; i < num_robots; i++) {
+    		for (int i = 0; i < cp.num_robots; i++) {
     			g2d.drawImage(robots_images[i], robots_graphics[i].getX(), robots_graphics[i].getY(), null);
 			}
-    		for (int i = 0; i < obstacles.length; i++) {
-    			g2d.drawImage(obstacle_image, obstacles[i].getX() * dim, obstacles[i].getY() * dim, null);
+    		for (int i = 0; i < cp.num_obstacles; i++) {
+    			g2d.drawImage(obstacle_image, cp.obstacles[i].getX() * cp.dim, cp.obstacles[i].getY() * cp.dim, null);
 			}
         }
 
@@ -272,17 +205,5 @@ public class Board extends JPanel {
         }
 	}
 	
-	public static void main(String args[]) throws Exception {
-		Board check = new Board();
-		JFrame frame = new JFrame();
-		frame.setTitle("ProjectName");
-		frame.setSize(check.x * check.dim + 8, check.y * check.dim + y_offset + 8);
-		check.setSize(check.x * check.dim + 8, check.y * check.dim);
-		//frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		frame.setVisible(true);
-		check.setVisible(true);
-		frame.setLayout(new BorderLayout());
-		frame.add(check, BorderLayout.CENTER);
-		check.run();
-	}
+	
 }
