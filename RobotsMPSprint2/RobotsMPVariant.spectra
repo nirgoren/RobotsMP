@@ -39,7 +39,6 @@ type DimY = Int(0..DimY);
 	Ypos   = next(Ypos) |
 	Ypos-1 = next(Ypos) ) &   
 	Xpos   = next(Xpos);
-	
     
   predicate validMove(Int(0.. (NumRobots-1)) i):
   	moveXOnly(robotsX[i], robotsY[i]) | moveYOnly(robotsX[i], robotsY[i]);
