@@ -40,8 +40,7 @@ public class Board extends JPanel {
 	BufferedImage buffer;
 	BufferedImage[] robots_images;
 	BufferedImage[] goals_images;
-	BufferedImage base_robot_image;
-	BufferedImage base_goal_image;
+	BufferedImage[] base_robot_images;
 	BufferedImage obstacle_image;
 	
 	public Board(ControlPanel cp)
@@ -52,6 +51,7 @@ public class Board extends JPanel {
 		start_graphics = new Point[cp.num_robots];
 		target_graphics = new Point[cp.num_robots];
 		robots_images = new BufferedImage[cp.num_robots];
+		base_robot_images = new BufferedImage[cp.num_robots];
 		goals_images = new BufferedImage[cp.num_robots];
 	}
 	
@@ -62,13 +62,13 @@ public class Board extends JPanel {
 			target_graphics[i] = new Point();
 			robots_graphics[i] = new Point();
 		}
-		base_robot_image = ImageIO.read(new File("img/pacman.jpg"));
-		obstacle_image = ImageIO.read(new File("img/ghost.jpg"));
-		base_goal_image = ImageIO.read(new File("img/coin.jpg"));
+		
+		obstacle_image = ImageIO.read(new File("img/Obstacle.png"));
 
 		for (int i = 0; i < cp.num_robots; i++) {
-			robots_images[i] = ImageIO.read(new File("img/pacman.jpg"));
-			goals_images[i] = ImageIO.read(new File("img/coin.jpg"));
+			base_robot_images[i] = ImageIO.read(new File("img/Robot" + String.valueOf(i) + ".png"));
+			robots_images[i] = ImageIO.read(new File("img/Robot" + String.valueOf(i) + ".png"));
+			goals_images[i] = ImageIO.read(new File("img/Goal" + String.valueOf(i) + ".png"));
 		}
 	}
 	
@@ -79,20 +79,20 @@ public class Board extends JPanel {
 			int diff_y = cp.robots[i].getY() - cp.robots_prev[i].getY();
 			switch(diff_x)
 			{
-			case 1:
-				robots_images[i] = base_robot_image;
-				break;
 			case -1:
-				robots_images[i] = Utility.rotate(base_robot_image, Math.PI);
+				robots_images[i] = Utility.rotate(base_robot_images[i], 3*Math.PI/2);
+				break;
+			case 1:
+				robots_images[i] = Utility.rotate(base_robot_images[i], Math.PI/2);
 				break;
 			}
 			switch(diff_y)
 			{
-			case 1:
-				robots_images[i] = Utility.rotate(base_robot_image, Math.PI/2);
-				break;
 			case -1:
-				robots_images[i] = Utility.rotate(base_robot_image, 3*Math.PI/2);
+				robots_images[i] = Utility.rotate(base_robot_images[i], 0);
+				break;
+			case 1:
+				robots_images[i] = Utility.rotate(base_robot_images[i], Math.PI);
 				break;
 			}
 		}
@@ -115,15 +115,21 @@ public class Board extends JPanel {
             		timer.stop();
                     animation_steps =0;
                     cp.ready_for_next = true;
-                    cp.advance_button.setText("Next step");
+                    if (cp.autorun)
+                    {
+                    	try {
+                            cp.next();
+                        }
+                        catch (Exception ex)
+                        {
+                        	System.out.println(ex);
+                        }
+                    }
+                    else
+                    {
+                        cp.advance_button.setText("Next step");
+                    }
                     return;
-//            		try {
-//						next();
-//					} catch (Exception e1) {
-//						// TODO Auto-generated catch block
-//						e1.printStackTrace();
-//					}
-//                    return;
             	}
             	for (int i = 0; i < cp.num_robots; i++) {
 					robots_graphics[i].setX((int)(start_graphics[i].getX() * (1 - (double)(animation_steps)/num_steps)
@@ -170,16 +176,16 @@ public class Board extends JPanel {
             int row;
     		int col;
     		//todo: toggle grid with user input
-//            for (row = 0; row < y; row++) {
-//    			for (col = 0; col < x; col++) {
-//    				if ((row % 2) == (col % 2))
-//    					g2d.setColor(Color.BLACK);
-//    				else
-//    					g2d.setColor(Color.DARK_GRAY);
-//
-//    				g2d.fillRect(col * dim, row * dim, dim, dim);
-//    			}
-//    		}
+            for (row = 0; row < cp.y; row++) {
+    			for (col = 0; col < cp.x; col++) {
+    				if ((row % 2) == (col % 2))
+    					g2d.setColor(Color.WHITE);
+    				else
+    					g2d.setColor(Color.WHITE);
+
+    				g2d.fillRect(col * cp.dim, row * cp.dim, cp.dim, cp.dim);
+    			}
+    		}
 
     		g2d.setColor(Color.WHITE);
     		//g2d.drawImage(robot_image, temp, dim, null);

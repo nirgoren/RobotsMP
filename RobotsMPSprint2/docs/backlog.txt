@@ -1,18 +1,20 @@
 Project Tasks
 -------------
 
-T4. Fix weird behaviour about the start locations of the robots in Variant1
-T5. Understand why G (validMove(robotsX[1], robotsY[1])); doesn't produce expected behaviour but G ((moveXOnly(robotsX[1], robotsY[1]) | moveYOnly(robotsX[1], robotsY[1]))); does
-for robot1 in RobotsMPMain (and other variants too) - update: this is due to a confirmed bug in spectra
-T6. Improve visuals
-T7. Add system variables and interactivity
-T8. Figure out dealing with unreachable targets
+T1. Improve visuals
+T2. Add interactivity? (setting goals manually)
+T3. Add unlabeled variant
+T4. Add fuel constraints
+T5. Set board dimensions, robot and obstacles count and initial locations for the simulations 
+via the ControlPanel constructor
 
-
-
-Delivered in Sprint 1
+Delivered in Sprint 2
 ---------------------
 
-T1. Basic safety guarantees about robot movement
-T2. Simulation running (but still not interactive)
-T3. Basic safety guarantees about robot movement
+T1. Added support for changing goals with assumptions for reachability
+T2. Added animation for robots
+T3. Added images for robots, obstacles, goals
+T4. Added constraint for the robots to not swap locations
+T5. Added support for running the simulation manually or automatically
+T6. Code Refactored to be more modular
+T7. Specifications made to be more generic

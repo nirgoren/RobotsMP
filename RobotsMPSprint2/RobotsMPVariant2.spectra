@@ -29,8 +29,6 @@ type DimY = Int(0..DY);
   start1 := robotsX[1] = 4 & robotsY[1] = 4;  
   obstaclesX[NumObstacles] := {0, 1, 3, 4};
   obstaclesY[NumObstacles] := {2, 2, 2, 2};
-  goal0 := robotsX[0]=0 & robotsY[0]=4;
-  goal1 := robotsX[1]=4 & robotsY[1]=0;
   	
   predicate moveXOnly(DimX Xpos, DimY Ypos):
 	(Xpos+1 = next(Xpos) |
@@ -57,15 +55,9 @@ type DimY = Int(0..DY);
   	  	
   predicate CollisionBetweenRobots(Int(0.. (NumRobots-1)) i, Int(0.. (NumRobots-1)) j):
   	(i != j) & (robotsX[i] = robotsX[j] & robotsY[i] = robotsY[j]);
-  
-  predicate reachGoal(Int(0.. (NumRobots-1)) i):
- 	goal0 & goal1;
   	
   gar startPositions:
   	start0 & start1;
-  	
-  gar goalPositions:
-  	GF goal0 & goal1;
   
   gar noCollisionsWithObstacles:
   	G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumObstacles-1)).!(robotsX[i] = obstaclesX[j] & robotsY[i] = obstaclesY[j]);
@@ -86,10 +78,10 @@ type DimY = Int(0..DY);
   	GF forall i in Int(0..(NumRobots-1)).robotsX[i] = goalsX[i] & robotsY[i] = goalsY[i];
   	
   asm noGoalChangeMidWay:
-  	G forall i in Int(0..(NumRobots-1)).next(goalsX[i]) != goalsX[i] | next(goalsY[i]) != goalsY[i] -> (forall i in Int(0..(NumRobots-1)).robotsX[i] = goalsX[i] & robotsY[i] = goalsY[i]);
+  	G forall i in Int(0..(NumRobots-1)).(next(goalsX[i]) != goalsX[i] | next(goalsY[i]) != goalsY[i]) -> (forall i in Int(0..(NumRobots-1)).robotsX[i] = goalsX[i] & robotsY[i] = goalsY[i]);
   	
   asm noSameGoals:
-  	G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumRobots-1)).!(goalsX[i] = goalsX[j] & goalsY[i] = goalsY[j]) ;
+  	G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumRobots-1)).(i!=j) -> !(goalsX[i] = goalsX[j] & goalsY[i] = goalsY[j]) ;
  
   	
   
