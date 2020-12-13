@@ -1,9 +1,7 @@
 import "./imports/DwyerPatterns.spectra"
 
 /**
- * Specifies the assumptions and guarantees of ProjectName...
- * 
- * Note the parametric Dim type.  
+ * Changing goals variant - for ControlPanelChangingGoals
  */
  
  
