@@ -9,8 +9,8 @@ import javax.swing.JFrame;
 
 public class MainClass {
 	public static void main(String args[]) throws Exception {
-		//ControlPanel cp = new ControlPanel(); // Fixed goals - Compatible with Variant 1
-		ControlPanel cp = new ControlPanelChangingGoals(); // Changing goals - Compatible with Variant 2
+		//ControlPanel cp = new ControlPanel(); // Fixed goals - Compatible with RobotsMPFixedGoals
+		ControlPanel cp = new ControlPanelChangingGoals(); // Changing goals - Compatible with RobotsMPChangingGoals
 		cp.init();
 	}
 }

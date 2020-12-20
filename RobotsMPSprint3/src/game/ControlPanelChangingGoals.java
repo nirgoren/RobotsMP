@@ -14,15 +14,13 @@ import tau.smlab.syntech.controller.jit.BasicJitController;
 
 public class ControlPanelChangingGoals extends ControlPanel {
 	
+	public ControlPanelChangingGoals(int x, int y, int num_robots, Point[] obstacles, Point[] goals) {
+		super(x, y, num_robots, obstacles, goals);
+	}
+	
 	@Override
 	public void init() throws Exception {
-		obstacles[0] = new Point(0,2);
-		obstacles[1] = new Point(1,2);
-		obstacles[2] = new Point(3,2);
-		obstacles[3] = new Point(4,2);
-		goals[0] = new Point(0, 4);
-		goals[1] = new Point(4, 0);
-		
+		autorun = false;
 		for (int i = 0; i < num_robots; i++) {
 			robots[i] = new Point();
 			robots_prev[i] = new Point();
