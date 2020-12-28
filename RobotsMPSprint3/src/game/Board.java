@@ -109,7 +109,7 @@ public class Board extends JPanel {
 			timer = new Timer(16, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	int num_steps = 40;
+            	int num_steps = 20;
             	if (animation_steps > num_steps)
             	{
             		timer.stop();

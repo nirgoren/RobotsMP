@@ -28,4 +28,5 @@ Guarantees - Limited fuel
 2. The robots should move in steps of at most 1 in each direction, and only in one direction
 3. The robots should not collide with each other or the obstacles
 4. The robots should not swap locations with each other
-5. Each robot can move at most <fuel> times before reaching its goal (staying in place doesn't count as a move)
+5. Robot i can move at most <fuel[i]> times before reaching its goal (staying in place doesn't count as a move)
+6. All Robots stop moving once all robots have reached their goal

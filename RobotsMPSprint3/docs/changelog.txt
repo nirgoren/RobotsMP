@@ -1,3 +1,5 @@
 T1. Added Unlabelled variant
 T2. Set board dimensions, robot and obstacles count and initial locations for the simulations 
 via the ControlPanel constructor
+T3. Added fuel constraints
+T4. Added second "scene" for each spec
