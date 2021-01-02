@@ -26,6 +26,7 @@ public class MainClass {
 			switch(args[0]) {
 			case "1":
 				System.out.println("Running with scene 1");
+				break;
 			case "2":
 				System.out.println("Running with scene 2");
 				x = 5;
@@ -37,6 +38,7 @@ public class MainClass {
 				obstacles[3] = new Point(4,2);
 				obstacles[4] = new Point(3,5);
 				obstacles[5] = new Point(0,1);
+				break;
 			}
 		}
 		
