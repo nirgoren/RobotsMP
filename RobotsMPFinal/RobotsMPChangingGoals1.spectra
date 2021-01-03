@@ -76,10 +76,12 @@ type DimY = Int(0..DY);
   	GF forall i in Int(0..(NumRobots-1)).robotsX[i] = goalsX[i] & robotsY[i] = goalsY[i];
   	
   asm noGoalChangeMidWay:
-  	G forall i in Int(0..(NumRobots-1)).(next(goalsX[i]) != goalsX[i] | next(goalsY[i]) != goalsY[i]) -> (forall i in Int(0..(NumRobots-1)).robotsX[i] = goalsX[i] & robotsY[i] = goalsY[i]);
+  	G forall i in Int(0..(NumRobots-1)).(next(goalsX[i]) != goalsX[i] | next(goalsY[i]) != goalsY[i]) -> 
+  	(forall i in Int(0..(NumRobots-1)).robotsX[i] = goalsX[i] & robotsY[i] = goalsY[i]);
+  	
   	
   asm noSameGoals:
-  	G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumRobots-1)).(i!=j) -> !(goalsX[i] = goalsX[j] & goalsY[i] = goalsY[j]) ;
+  	G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumRobots-1)).(i!=j) -> !(goalsX[i] = goalsX[j] & goalsY[i] = goalsY[j]);
  
   	
   

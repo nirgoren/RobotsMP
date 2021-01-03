@@ -30,7 +30,7 @@ public class ControlPanelUnlabelled extends ControlPanelChangingGoals {
 		board.init();
 		frame.setTitle("RobotsMP");
 		frame.setSize(x * dim + 8 + 150, y * dim + y_offset + 8);
-		board.setSize(x * dim + 8, y * dim);
+		board.setSize(x * dim , y * dim);
 		frame.setLayout(null);
 		frame.add(board, BorderLayout.CENTER);
 		advance_button.addActionListener(new ActionListener() 

@@ -19,7 +19,7 @@ type DimY = Int(0..DY);
  sys DimY[NumRobots] robotsY;
  
  env DimX[NumRobots] goalsX;
- env DimX[NumRobots] goalsY;
+ env DimY[NumRobots] goalsY;
  
  
  define
