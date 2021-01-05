@@ -12,6 +12,7 @@ import "./imports/DwyerPatterns.spectra"
  define NumObstacles := 4;
  define DX := 4;
  define DY := 4;
+ // The fuel allocated for each robot
  define fuel0 := 8; // Couldn't use this in fuelLimit0 instead of hard coded 8 (won't compile)
  define fuel1 := 8; // Couldn't use this in fuelLimit1 instead of hard coded 8 (won't compile)
  
@@ -84,6 +85,8 @@ type DimY = Int(0..DY);
 //  predicate move(Int(0.. (NumRobots-1)) i):
 //  	next(robotsX[i]) != robotsX[i] | next(robotsY[i]) != robotsY[i];
     
+    
+  // move<i> is true iff robot<i> moved during the last turn   
   gar move0consistency:
   	G (next(robotsX[0]) != robotsX[0] | next(robotsY[0]) != robotsY[0]) <-> move0;
   	
@@ -104,9 +107,11 @@ type DimY = Int(0..DY);
 //   gar fuelLimit1:
 //  	trig [true]* |=> ([!move(1)]*[move(1)]){0,8}[reachGoal(1) & reachGoal(1)];
 
+  // The robots stay at their goals once all have reached their destinations
   gar stayAtGoals:
   	G reachGoals() -> !move0 & !move1;
-  	    
+  
+  // Robot<i> can move at most fuel<i> times before all robots have reached their goal 
   gar fuelLimit0:
     trig [true]* |=> ([!move0]*[move0][!move0]*){0,8}[reachGoals()];
   

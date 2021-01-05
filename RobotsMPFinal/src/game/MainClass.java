@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 
 public class MainClass {
 	public static void main(String args[]) throws Exception {
+		// Prepare values for scene 1
 		int x = 5;
 		int y = 5;
 		int num_robots = 2;
@@ -31,6 +32,7 @@ public class MainClass {
 				scene = "1";
 				break;
 			case "2":
+				// Prepare values for scene 2
 				System.out.println("Running with scene 2");
 				scene = "2";
 				x = 5;
@@ -44,6 +46,7 @@ public class MainClass {
 				obstacles[5] = new Point(0,1);
 				break;
 			case "3":
+				// Prepare values for scene 3
 				System.out.println("Running with scene 3");
 				scene = "3";
 				x = 4;
@@ -83,7 +86,7 @@ public class MainClass {
 			case "fuel":
 				path = path + "RobotsMPFuel" + scene;
 				System.out.println("Running in limited fuel mode");
-				cp = new ControlPanel(x, y, num_robots, obstacles, goals, path); // Fixed goals - Compatible with RobotsMPFixedGoals
+				cp = new ControlPanel(x, y, num_robots, obstacles, goals, path); // Limited fuel - Compatible with RobotsMPFuel
 				break;
 			default:
 				System.out.println("Running in fixed goals mode");

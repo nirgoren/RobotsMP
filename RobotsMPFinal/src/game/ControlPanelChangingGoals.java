@@ -25,6 +25,8 @@ public class ControlPanelChangingGoals extends ControlPanel {
 			robots[i] = new Point();
 			robots_prev[i] = new Point();
 		}
+		
+		// Set up inital goal locations
 		executor = new ControllerExecutor(new BasicJitController(), path);
 		for (int i = 0; i < num_robots; i++) {
 			inputs.put("goalsX[" + i + "]", String.valueOf(goals[i].getX()));
@@ -52,6 +54,8 @@ public class ControlPanelChangingGoals extends ControlPanel {
 			robots_prev[i].setX(robots[i].getX());
 			robots_prev[i].setY(robots[i].getY());
 		}
+		
+		// Update goal locations (if all robots have reached their destinations)
 		if (all_reach_goals())
 		{
 			set_new_goals();
@@ -72,6 +76,7 @@ public class ControlPanelChangingGoals extends ControlPanel {
 		board.animate();
 	}
 	
+	// Set new random goal locations after the robots have reached their destination
 	private void set_new_goals()
 	{
 		for (int i = 0; i < goals.length; ) {
@@ -107,6 +112,7 @@ public class ControlPanelChangingGoals extends ControlPanel {
 		}
 	}
 	
+	// Check if all robots have reached their goals
 	protected boolean all_reach_goals()
 	{
 		for (int i = 0; i < robots.length; i++) {

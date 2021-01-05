@@ -1,14 +1,15 @@
 Project Tasks
 -------------
 
-T1. Improve visuals (?)
-T2. Check well separation warning
+T1. Check well separation warning
 
 
-Delivered in Sprint 3
+Delivered in Final
 ---------------------
 
-T1. Added Unlabelled variant
-T2. Set board dimensions, robot and obstacles count and initial locations for the simulations 
-via the ControlPanel constructor
-T3. Add fuel constraints
+T1. Added scene 3 and unrealizable scenes
+T2. Improved visuals
+T3. Added documentation
+T4. Added separate folder for each controller - no need to 
+generate a specific controller before every run
+T5. Some general fixes

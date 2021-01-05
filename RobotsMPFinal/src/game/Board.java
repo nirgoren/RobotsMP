@@ -28,11 +28,15 @@ import game.Point;
 import game.Utility;
 
 @SuppressWarnings("serial")
+// Responsible for visualisation/animation of transitions
 public class Board extends JPanel {
 	
 	int animation_steps = 0;
 	Timer timer;
 	ControlPanel cp;
+	
+	// The robots current, start, and target locations for a single transition
+	// - used for animation
 	Point[] robots_graphics;
 	Point[] start_graphics;
 	Point[] target_graphics;
@@ -65,6 +69,7 @@ public class Board extends JPanel {
 		
 		obstacle_image = ImageIO.read(new File("img/Obstacle.png"));
 
+		// Load images for different elements
 		for (int i = 0; i < cp.num_robots; i++) {
 			base_robot_images[i] = ImageIO.read(new File("img/Robot" + String.valueOf(i) + ".png"));
 			robots_images[i] = ImageIO.read(new File("img/Robot" + String.valueOf(i) + ".png"));
@@ -72,11 +77,13 @@ public class Board extends JPanel {
 		}
 	}
 	
+	// Animate a transition (from robots_prev to robots)
 	public void animate() throws Exception
 	{
 		for (int i = 0; i < cp.num_robots; i++) {
 			int diff_x = cp.robots[i].getX() - cp.robots_prev[i].getX();
 			int diff_y = cp.robots[i].getY() - cp.robots_prev[i].getY();
+			// rotate robots based on direction
 			switch(diff_x)
 			{
 			case -1:
@@ -105,15 +112,16 @@ public class Board extends JPanel {
 			target_graphics[i].setX(cp.robots[i].getX() * cp.dim); 
 			target_graphics[i].setY(cp.robots[i].getY() * cp.dim); 
 		}
-
+			// Each tick of the timer advances the animation
 			timer = new Timer(16, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	int num_steps = 20;
             	if (animation_steps > num_steps)
+            	// Animation ended
             	{
             		timer.stop();
-                    animation_steps =0;
+                    animation_steps = 0;
                     cp.ready_for_next = true;
                     if (cp.autorun)
                     {
@@ -131,6 +139,7 @@ public class Board extends JPanel {
                     }
                     return;
             	}
+            	// Update robot location for current animation step
             	for (int i = 0; i < cp.num_robots; i++) {
 					robots_graphics[i].setX((int)(start_graphics[i].getX() * (1 - (double)(animation_steps)/num_steps)
 							+ target_graphics[i].getX() * ((double)(animation_steps)/num_steps)));
@@ -138,6 +147,7 @@ public class Board extends JPanel {
 							+ target_graphics[i].getY() * ((double)(animation_steps)/num_steps)));
 				}
             	animation_steps++;
+            	// Redraw
             	updateBuffer();
             	repaint();
             }
@@ -153,6 +163,7 @@ public class Board extends JPanel {
         super.invalidate();
     }
 	
+    // Use buffering for smooth animations
 	protected void updateBuffer() {
         if (getWidth() > 0 && getHeight() > 0) {
 
@@ -175,7 +186,7 @@ public class Board extends JPanel {
             
             int row;
     		int col;
-    		//todo: toggle grid with user input
+    		// Draw background
             for (row = 0; row < cp.y; row++) {
     			for (col = 0; col < cp.x; col++) {
     				if ((row % 2) == (col % 2))
@@ -189,12 +200,15 @@ public class Board extends JPanel {
 
     		g2d.setColor(Color.WHITE);
     		//g2d.drawImage(robot_image, temp, dim, null);
+    		// Draw goals
     		for (int i = 0; i < cp.num_robots; i++) {
 			g2d.drawImage(goals_images[i], cp.goals[i].getX() * cp.dim, cp.goals[i].getY() * cp.dim, null);
     		}
+    		// Draw robots
     		for (int i = 0; i < cp.num_robots; i++) {
     			g2d.drawImage(robots_images[i], robots_graphics[i].getX(), robots_graphics[i].getY(), null);
 			}
+    		// Draw obstacles
     		for (int i = 0; i < cp.num_obstacles; i++) {
     			g2d.drawImage(obstacle_image, cp.obstacles[i].getX() * cp.dim, cp.obstacles[i].getY() * cp.dim, null);
 			}

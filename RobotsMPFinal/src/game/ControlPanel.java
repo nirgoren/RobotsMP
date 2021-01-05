@@ -14,28 +14,42 @@ import javax.swing.JFrame;
 import tau.smlab.syntech.controller.executor.ControllerExecutor;
 import tau.smlab.syntech.controller.jit.BasicJitController;
 
+/*
+ * Manages the simulation - GUI, controller input/output, board (visualisation)
+ */
+
 public class ControlPanel {
+	//board dimensions
 	int x;
 	int y;
+	// board constants
 	final int dim = 100;
 	static final int y_offset = 30;
+	
 	int num_robots;
 	int num_obstacles;
 	Point[] robots;
 	Point[] obstacles;
 	Point[] goals;
 	
+	// holds the robots previous position (for use when animating transitions)
 	Point[] robots_prev = new Point[num_robots];
 	
+	// Board and GUI elements
 	JFrame frame;
 	Board board;
 	JButton advance_button;
 	JButton autorun_button;
 	
+	// holds states for the animation
 	boolean ready_for_next;
 	boolean autorun;
+	
+	// The controller and its inputs
 	ControllerExecutor executor;
 	Map<String,String> inputs = new HashMap<String, String>();
+	
+	// The path to the controller files
 	String path;
 	
 	public ControlPanel(int x, int y, int num_robots, Point[] obstacles, Point[] goals, String path)
@@ -59,11 +73,13 @@ public class ControlPanel {
 			robots_prev[i] = new Point();
 		}
 		
+		// init controller
 		executor = new ControllerExecutor(new BasicJitController(), this.path);
 		executor.initState(inputs);
 		
 		Map<String, String> sysValues = executor.getCurrOutputs();
 		
+		// set initial robot locations
 		for (int i = 0; i < num_robots; i++) {
 			robots_prev[i].setX(Integer.parseInt(sysValues.get("robotsX[" + i + "]")));
 			robots_prev[i].setY(Integer.parseInt(sysValues.get("robotsY[" + i + "]")));
@@ -74,6 +90,7 @@ public class ControlPanel {
 		set_up_UI();
 	}
 	
+	// handle next turn
 	void next() throws Exception {
 		ready_for_next = false;
 		advance_button.setText("...");
@@ -83,12 +100,16 @@ public class ControlPanel {
 		}
 		executor.updateState(inputs);
 		
+		// Receive updated values from the controller
 		Map<String, String> sysValues = executor.getCurrOutputs();
 		
+		// Update robot locations
 		for (int i = 0; i < num_robots; i++) {
 			robots[i].setX(Integer.parseInt(sysValues.get("robotsX[" + i + "]")));
 			robots[i].setY(Integer.parseInt(sysValues.get("robotsY[" + i + "]")));
 		}
+		
+		// Animate transition
 		board.animate();
 	}
 	
@@ -106,6 +127,8 @@ public class ControlPanel {
 		board.setSize(x * dim , y * dim);
 		frame.setLayout(null);
 		frame.add(board, BorderLayout.CENTER);
+		
+		// Handle presses of the "next step" button
 		advance_button.addActionListener(new ActionListener() 
 				{
 					public void actionPerformed(ActionEvent arg0) {
@@ -118,6 +141,7 @@ public class ControlPanel {
 	    advance_button.setBounds(x * dim + 8,0,130,50);
 	    advance_button.setText("Start");
 	    
+	   // Handle presses of the "autorun/stop autorun" button
 	    autorun_button.addActionListener(new ActionListener()
 	    		{
 			    	public void actionPerformed(ActionEvent arg0) {

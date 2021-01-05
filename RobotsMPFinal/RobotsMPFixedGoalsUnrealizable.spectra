@@ -23,6 +23,8 @@ type DimY = Int(0..DY);
  define
   startX[NumRobots] := {0, 4};
   startY[NumRobots] := {0, 4};
+  
+  // Obstacles create a complete "wall"
   obstaclesX[NumObstacles] := {0, 1, 2, 3, 4};
   obstaclesY[NumObstacles] := {2, 2, 2, 2, 2};
   goalsX[NumRobots] := {0, 4};

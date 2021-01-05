@@ -26,6 +26,7 @@ public class ControlPanelUnlabelled extends ControlPanelChangingGoals {
 		frame = new JFrame();
 	    frame.add(advance_button);
 	    frame.add(autorun_button);
+	    // Use unlabelled board
 		board = new UnlabelledBoard(this);
 		board.init();
 		frame.setTitle("RobotsMP");
@@ -73,6 +74,7 @@ public class ControlPanelUnlabelled extends ControlPanelChangingGoals {
 		ready_for_next = true;
 	}
 	
+	// Check if all robots have reached some destination
 	@Override
 	protected boolean all_reach_goals()
 	{

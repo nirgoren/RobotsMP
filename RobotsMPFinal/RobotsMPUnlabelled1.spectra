@@ -74,9 +74,11 @@ type DimY = Int(0..DY);
   asm noGoalOnObstacle:
   	G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumObstacles-1)).!(goalsX[i] = obstaclesX[j] & goalsY[i] = obstaclesY[j]);
   	
+  // All robots should eventually reach some goal
   gar reachGoals:
   	GF forall i in Int(0..(NumRobots-1)).exists j in Int(0..(NumRobots-1)).robotsX[i] = goalsX[j] & robotsY[i] = goalsY[j];
   	
+  // The goals can only change once all robots have reached some goal
   asm noGoalChangeMidWay:
   	G forall i in Int(0..(NumRobots-1)).(next(goalsX[i]) != goalsX[i] | next(goalsY[i]) != goalsY[i]) -> 
   		(forall i in Int(0..(NumRobots-1)).exists j in Int(0..(NumRobots-1)).robotsX[i] = goalsX[j] & robotsY[i] = goalsY[j]);
