@@ -1,0 +1,116 @@
+import "./imports/DwyerPatterns.spectra"
+
+/**
+ * Changing goals variant - for ControlPanelChangingGoals
+ * Non-well separated because no initial goal locations can be valid
+ */
+ 
+ 
+ spec RobotsMPChangingGoalsNWS
+ 
+ define NumRobots := 2;
+ define NumObstacles := 3;
+ 
+ //Board dimensions are DX+1 X DY+1
+ define DX := 1;
+ define DY := 1;
+ 
+type DimX = Int(0..DX);
+type DimY = Int(0..DY);
+ 
+ // robotsX[i] holds the X position of robot i
+ // respectively for robotsY[i]
+ 
+ sys DimX[NumRobots] robotsX;
+ sys DimY[NumRobots] robotsY;
+ 
+ // goalsX[i] holds the X position of goal i
+ // respectively for goalsY[i]
+ 
+ env DimX[NumRobots] goalsX;
+ env DimX[NumRobots] goalsY;
+ 
+ 
+ define
+ // The start positions for the robots
+  startX[NumRobots] := {0, 1};
+  startY[NumRobots] := {0, 1};
+ // The positions for the obstacles
+  obstaclesX[NumObstacles] := {0, 0, 1};
+  obstaclesY[NumObstacles] := {0, 1, 0};
+  	
+ // True iff the robot moves only in the X dimension for at most one step
+  predicate moveXOnly(DimX Xpos, DimY Ypos):
+	(Xpos+1 = next(Xpos) |
+	Xpos   = next(Xpos) |
+	Xpos-1 = next(Xpos) ) &   
+	Ypos   = next(Ypos);
+  
+  // True iff the robot moves only in the Y dimension for at most one step
+  predicate moveYOnly(DimX Xpos, DimY Ypos):
+	(Ypos+1 = next(Ypos) |
+	Ypos   = next(Ypos) |
+	Ypos-1 = next(Ypos) ) &   
+	Xpos   = next(Xpos);
+	
+	
+//Buggy	
+//  predicate CollisionRobotObstacle(Int(0.. (NumRobots-1)) i, Int(0.. (NumObstacles-1)) j):
+//  	robotsX[i] = obstaclesX[j] & robotsY[i] = obstaclesY[j];
+//  	
+//  predicate validMove(Int(0.. (NumRobots-1)) i):
+//  	moveXOnly(robotsX[i], robotsY[i]) | moveYOnly(robotsX[i], robotsY[i]);
+	
+  // True iff robot i switches positions with robot j
+  predicate swap(Int(0.. (NumRobots-1)) i, Int(0.. (NumRobots-1)) j):
+  	(i != j) & ((next(robotsX[i]) = robotsX[j] & next(robotsY[i]) = robotsY[j]) | (next(robotsX[j]) = robotsX[i] & next(robotsY[j]) = robotsY[i]));
+  	  	
+  // True iff robot i collides with robot j
+  predicate CollisionBetweenRobots(Int(0.. (NumRobots-1)) i, Int(0.. (NumRobots-1)) j):
+  	(i != j) & (robotsX[i] = robotsX[j] & robotsY[i] = robotsY[j]);
+  	
+  // The robots begin at their defined start locations
+  gar startPositions:
+  	forall i in Int(0..(NumRobots-1)).robotsX[i] = startX[i] & robotsY[i] = startY[i];
+  
+  // The robots should never collide with the obstacles
+  gar noCollisionsWithObstacles:
+  	G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumObstacles-1)).!(robotsX[i] = obstaclesX[j] & robotsY[i] = obstaclesY[j]);
+   
+  // The robots should never collide with each other
+  gar noCollisionsBetweenRobots:
+  	G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumRobots-1)).!CollisionBetweenRobots(i, j);
+  	
+  // The robots can't swap locations (in one turn)
+  gar noSwaps:
+  	G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumRobots-1)).!swap(i, j);
+  	
+  // The robots can move only one step in one direction
+  gar validMoves:
+    G forall i in Int(0..(NumRobots-1)).(moveXOnly(robotsX[i], robotsY[i]) | moveYOnly(robotsX[i], robotsY[i]));
+    
+  // A goal's position can't coincide with an obstacle
+  asm noGoalOnObstacle:
+   	//The commented out asm seems to work, but spectra reports on non-well seperation
+  	//G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumObstacles-1)).!(goalsX[i] = obstaclesX[j] & goalsY[i] = obstaclesY[j]);
+  	G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumObstacles-1)).!(next(goalsX[i] = obstaclesX[j] & goalsY[i] = obstaclesY[j]));
+  asm ini forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumObstacles-1)).!(goalsX[i] = obstaclesX[j] & goalsY[i] = obstaclesY[j]);
+  	
+  // The robots eventually all reach their destinations
+  gar reachGoals:
+  	GF forall i in Int(0..(NumRobots-1)).robotsX[i] = goalsX[i] & robotsY[i] = goalsY[i];
+  	
+  // The goals locations can't change until all robots have reached their destination
+  asm noGoalChangeMidWay:
+  	G forall i in Int(0..(NumRobots-1)).(next(goalsX[i]) != goalsX[i] | next(goalsY[i]) != goalsY[i]) -> 
+  	(forall i in Int(0..(NumRobots-1)).robotsX[i] = goalsX[i] & robotsY[i] = goalsY[i]);
+  	
+  // Each goal location is unique
+  asm noSameGoals:
+  	//The commented out asm seems to work, but spectra reports on non-well seperation
+  	//G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumRobots-1)).(i!=j) -> !(goalsX[i] = goalsX[j] & goalsY[i] = goalsY[j]);
+  	G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumRobots-1)).(i!=j) -> !(next(goalsX[i] = goalsX[j] & goalsY[i] = goalsY[j]));
+  asm ini forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumRobots-1)).(i!=j) -> !(goalsX[i] = goalsX[j] & goalsY[i] = goalsY[j]); 
+ 
+  	
+  
