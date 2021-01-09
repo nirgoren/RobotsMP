@@ -90,7 +90,10 @@ type DimY = Int(0..DY);
     
   // A goal's position can't coincide with an obstacle
   asm noGoalOnObstacle:
-  	G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumObstacles-1)).!(goalsX[i] = obstaclesX[j] & goalsY[i] = obstaclesY[j]);
+   	//The commented out asm seems to work, but spectra reports on non-well seperation
+  	//G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumObstacles-1)).!(goalsX[i] = obstaclesX[j] & goalsY[i] = obstaclesY[j]);
+  	G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumObstacles-1)).!(next(goalsX[i] = obstaclesX[j] & goalsY[i] = obstaclesY[j]));
+  asm ini forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumObstacles-1)).!(goalsX[i] = obstaclesX[j] & goalsY[i] = obstaclesY[j]);
   	
   // The robots eventually all reach their destinations
   gar reachGoals:
@@ -103,7 +106,10 @@ type DimY = Int(0..DY);
   	
   // Each goal location is unique
   asm noSameGoals:
-  	G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumRobots-1)).(i!=j) -> !(goalsX[i] = goalsX[j] & goalsY[i] = goalsY[j]);
+  	//The commented out asm seems to work, but spectra reports on non-well seperation
+  	//G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumRobots-1)).(i!=j) -> !(goalsX[i] = goalsX[j] & goalsY[i] = goalsY[j]);
+  	G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumRobots-1)).(i!=j) -> !(next(goalsX[i] = goalsX[j] & goalsY[i] = goalsY[j]));
+  asm ini forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumRobots-1)).(i!=j) -> !(goalsX[i] = goalsX[j] & goalsY[i] = goalsY[j]); 
  
   	
   

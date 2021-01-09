@@ -72,7 +72,8 @@ type DimY = Int(0..DY);
     G forall i in Int(0..(NumRobots-1)).(moveXOnly(robotsX[i], robotsY[i]) | moveYOnly(robotsX[i], robotsY[i]));
     
   asm noGoalOnObstacle:
-  	G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumObstacles-1)).!(goalsX[i] = obstaclesX[j] & goalsY[i] = obstaclesY[j]);
+  	G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumObstacles-1)).!(next(goalsX[i] = obstaclesX[j] & goalsY[i] = obstaclesY[j]));
+  asm ini forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumObstacles-1)).!(goalsX[i] = obstaclesX[j] & goalsY[i] = obstaclesY[j]);
   	
   gar reachGoals:
   	GF forall i in Int(0..(NumRobots-1)).exists j in Int(0..(NumRobots-1)).robotsX[i] = goalsX[j] & robotsY[i] = goalsY[j];
@@ -82,7 +83,8 @@ type DimY = Int(0..DY);
   		(forall i in Int(0..(NumRobots-1)).exists j in Int(0..(NumRobots-1)).robotsX[i] = goalsX[j] & robotsY[i] = goalsY[j]);
   	
   asm noSameGoals:
-  	G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumRobots-1)).(i!=j) -> !(goalsX[i] = goalsX[j] & goalsY[i] = goalsY[j]) ;
+  	G forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumRobots-1)).(i!=j) -> !(next(goalsX[i] = goalsX[j] & goalsY[i] = goalsY[j]));
+  asm ini forall i in Int(0..(NumRobots-1)).forall j in Int(0..(NumRobots-1)).(i!=j) -> !(goalsX[i] = goalsX[j] & goalsY[i] = goalsY[j]);
  
   	
   
