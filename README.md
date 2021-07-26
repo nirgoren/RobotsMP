@@ -34,7 +34,7 @@ The simulation follows the environment assumptions :
   
 “Wall” of obstacles- Unrealizable scene (Robots can't reach their targets): 
   
-  <img src="https://github.com/nirgorentau/RobotsMP/blob/c591e5af770072d1e99b8d56a11d1e5c5f7dd206/WallOfObstacles.png" width="400" height="400">
+  <img src="https://github.com/nirgorentau/RobotsMP/blob/a5ae99d7b2e9409c0b6b60456217ca7955154286/Wall_Of_Obstacles.png" width="400" height="400">
   
   
 Insufficient fuel- Unrealizable scene (Robots can't reach their targets):
