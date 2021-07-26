@@ -1,7 +1,7 @@
 # RobotsMP (Workshop in Software Models)
   ## A system of robots, targets and obstacles on a board
   
-  <img src="https://github.com/nirgorentau/RobotsMP/blob/d7ce817b0245997a1d2f03d19aad47fce7a9a496/Simulator_details.PNG" width="500" height="400">
+  <img src="https://github.com/nirgorentau/RobotsMP/blob/d7ce817b0245997a1d2f03d19aad47fce7a9a496/Simulator_details.PNG" width="600" height="400">
 
 **Requirements**:
 1. The robots should get to their targets infinitely often in every run.
