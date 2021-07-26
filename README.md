@@ -1,7 +1,7 @@
 # RobotsMP (Workshop in Software Models)
   ## A system of robots, targets and obstacles on a board
   
-  ![Simulator]( https://github.com/nirgorentau/RobotsMP/blob/229d808f581c2ed457897e515f2a51f5fc300db3/simulator.png?raw=true =250x250)
+  ![Simulator]( https://github.com/nirgorentau/RobotsMP/blob/229d808f581c2ed457897e515f2a51f5fc300db3/simulator.png =250x250)
 
 **The project includes 2 main parts**:
 1. Spectra specification- Spectra is a formal specification language for reactive systems which consists of logical constraints,
