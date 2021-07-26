@@ -1,7 +1,11 @@
 # RobotsMP (Workshop in Software Models)
-## A system of robots, targets and obstacles on a board.
+  ## A system of robots, targets and obstacles on a board
 
-
+**The project includes 2 main parts**:
+1. Spectra specification- Spectra is a formal specification language for reactive systems which consists of logical constraints,
+guarantees and assumptions, which describe temporal relations between inputs and outputs. Given a Spectra specification, construct a reactive
+system implementation, if one exits, that ensures satisfaction of the specification for all computations.
+2. GUI (Java Swing).
 
 **Requirements**:
 1. The robots should get to their targets infinitely often in every run.
@@ -27,9 +31,5 @@ The simulation follows the environment assumptions :
 
 
 ****************************************************************************************************************************
-The project includes 2 main parts:
-1. Spectra specification- Spectra is a formal specification language for reactive systems which consists of logical constraints,
-guarantees and assumptions, which describe temporal relations between inputs and outputs. Given a Spectra specification, construct a reactive
-system implementation, if one exits, that ensures satisfaction of the specification for all computations.
-2. GUI (Java Swing)
+
 
