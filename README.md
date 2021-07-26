@@ -1,5 +1,5 @@
 # RobotsMP (Workshop in Software Models)
-# A system of robots, targets and obstacles on a board.
+## A system of robots, targets and obstacles on a board.
 
 
 
