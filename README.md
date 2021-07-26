@@ -20,11 +20,34 @@ The simulation follows the environment assumptions :
 3. Unlabeled variant- All robots should reach some target, and once they do, the goals change.
 4. Limited fuel variant - each robot has limited number of steps it can make before all robots reach their pre-defined goals.
 
-********************************************************************************************************************************************
+**Scenes**
 
-**The project includes 2 main parts**:
-1. Spectra specification- Spectra is a formal specification language for reactive systems which consists of logical constraints,
-guarantees and assumptions, which describe temporal relations between inputs and outputs. Given a Spectra specification, construct a reactive
-system implementation, if one exits, that ensures satisfaction of the specification for all computations.
-2. GUI (Java Swing).
+4 obstacles, 2 robots , 5X5 board:
+  <img src="https://github.com/nirgorentau/RobotsMP/blob/c591e5af770072d1e99b8d56a11d1e5c5f7dd206/Scene1.png" width="600" height="400">
+
+6 obstacles, 2 robots, 5X6 board:
+  <img src="https://github.com/nirgorentau/RobotsMP/blob/c591e5af770072d1e99b8d56a11d1e5c5f7dd206/Scene2.png" width="600" height="400">
+
+4 obstacles, 3 robots, 4X4 board:
+  <img src="https://github.com/nirgorentau/RobotsMP/blob/c591e5af770072d1e99b8d56a11d1e5c5f7dd206/Scene3.png" width="600" height="400">
+  
+  
+  <img src="https://github.com/nirgorentau/RobotsMP/blob/c591e5af770072d1e99b8d56a11d1e5c5f7dd206/WallOfObstacles.png" width="600" height="400">
+  
+  
+  <img src="https://github.com/nirgorentau/RobotsMP/blob/35ee7151c8164e5c0a4ca6cca416ed16fdd29947/Limited_Fuel.png" width="600" height="400">
+
+
+
+
+
+
+
+********************************************************************************************************************************************
+**Comments: 
+- The project includes 2 main parts**:
+    1. Spectra specification- Spectra is a formal specification language for reactive systems which consists of logical constraints,
+       guarantees and assumptions, which describe temporal relations between inputs and outputs. Given a Spectra specification, construct a reactive
+       system implementation, if one exits, that ensures satisfaction of the specification for all computations.
+    2. GUI (Java Swing).
 
